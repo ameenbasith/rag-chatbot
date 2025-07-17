@@ -186,11 +186,13 @@ def display_chat_interface():
                         if message['metadata']['chunks']:
                             st.subheader("📚 Sources Used:")
                             for i, chunk in enumerate(message['metadata']['chunks'][:3], 1):
-                                with st.container():
-                                    st.write(f"**{i}. {chunk.get('document_id', 'Unknown')}** (Relevance: {chunk.get('similarity_score', 0):.1%})")
-                                    with st.expander(f"View text from {chunk.get('document_id', 'source')}"):
-                                        st.write(chunk.get('text', ''))
-
+                                st.write(
+                                    f"**{i}. {chunk.get('document_id', 'Unknown')}** (Relevance: {chunk.get('similarity_score', 0):.1%})")
+                                # Show first 150 characters of source text
+                                text_preview = chunk.get('text', '')[:150] + "..." if len(
+                                    chunk.get('text', '')) > 150 else chunk.get('text', '')
+                                st.write(f"📄 _{text_preview}_")
+                                st.write("---")
     # Chat input
     if prompt := st.chat_input("Ask a question about your documents..."):
         # Add user message
